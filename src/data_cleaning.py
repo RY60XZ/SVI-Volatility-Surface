@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 OPTIONS = Path(DATA / "options_data.csv")
 FUTURES = Path(DATA / "spx_futures.csv")
-OUTPUT = Path("data/processed/calibration_data.csv")
+OUTPUT = Path(DATA / "processed/calibration_data.csv")
 
 QDATE, ID, EXPIRY = "query_date", "ID", "fut_last_trade_dt()"
 LAST, BID, MID, ASK = (
