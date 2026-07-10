@@ -31,3 +31,34 @@ def fit_svi(k, w):
         initial_guess,
         bounds=(lower_bounds, upper_bounds),
     )
+
+def fit_svi_ridge(k, w, previous_params, lambda_ridge):
+    lambda_ridge = np.asarray(lambda_ridge, dtype=float)
+    if lambda_ridge.ndim != 0:
+        raise ValueError("lambda_ridge must be a scalar")
+    lambda_ridge = float(lambda_ridge)
+    if lambda_ridge < 0:
+        raise ValueError("lambda_ridge must be nonnegative")
+
+    if previous_params is None:
+        return fit_svi(k, w)
+
+    k = np.asarray(k, dtype=float)
+    w = np.asarray(w, dtype=float)
+    previous_params = np.asarray(previous_params, dtype=float)
+
+    initial_guess = previous_params
+
+    lower_bounds = [0.0, 1e-8, -0.999, k.min() - 1.0, 1e-8]
+    upper_bounds = [np.inf, np.inf, 0.999, k.max() + 1.0, np.inf]
+
+    def objective(params):
+        market_residuals = residuals(k, params, w)
+        ridge_residuals = np.sqrt(lambda_ridge) * (params - previous_params)
+        return np.concatenate([market_residuals, ridge_residuals])
+
+    return least_squares(
+        objective,
+        initial_guess,
+        bounds=(lower_bounds, upper_bounds),
+    )
