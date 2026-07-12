@@ -61,6 +61,38 @@ lambda_ridge = 7.5
 
 At this value, ridge calibration gives much smoother parameter paths while keeping mean IV RMSE close to the baseline result.
 
+## Main Results Summary
+
+| Section | Content |
+| --- | --- |
+| Method | Clean option IV data, keep OTM options, match each date to ESZ26 forward, compute log-moneyness and total variance |
+| Model | Fit SVI total variance: `w(k) = a + b * (rho * (k - m) + sqrt((k - m)^2 + sigma^2))` |
+| Time smoothing | Fit each date sequentially and add ridge penalty `lambda * ||theta_t - theta_previous||^2` |
+| Result | `lambda = 7.5` reduces average parameter jump from `0.027607` to `0.004463`, while mean IV RMSE stays close: `0.022390` baseline vs `0.022333` ridge |
+
+The fitted curves can be inspected across the sample period using representative snapshots:
+
+### Day 1 Smile
+
+![Day 1 smile](report/figures/smile_2026-01-02.png)
+
+### Middle Snapshot Smile
+
+![Middle snapshot smile](report/figures/smile_2026-03-18.png)
+
+### Final Snapshot Smile
+
+![Final snapshot smile](report/figures/smile_2026-06-01.png)
+
+### Ridge Parameter Paths
+
+![Ridge parameter paths](report/figures/ridge_lambda_7_5_parameter_paths.png)
+
+### Baseline vs Ridge Fitted Surface
+
+![Baseline vs ridge fitted surface](report/figures/baseline_vs_ridge_lambda_7_5_iv_surface.png)
+
+
 ## Tables
 
 ### Ridge Lambda Summary
